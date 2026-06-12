@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Workspace output (generated files, not source)
+/workspace/
+
+# Local agent/browser state and scratch plans
+/.claude/
+/.playwright-mcp/
+/tmp/
+/docs/
+
+# Personal thesis data (user-generated content)
+我的文件/
+参考论文/
+论文文献/
+paper-context/
+paper-output/
+thesis-ai-standard/
+*.docx
+论文题目及目录.txt
