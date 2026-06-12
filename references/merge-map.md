@@ -57,3 +57,25 @@
 | lunwen/examples/sample-outline.md | not migrated | Example file, not required by runtime. |
 | lunwen/.claude/* | not migrated | Platform-specific source agent commands. |
 | lunwen/.trae/* | not migrated | Platform-specific source agent commands. |
+
+## 2026 Structure Refactor
+
+| Previous location | Current location | Change note |
+| --- | --- | --- |
+| `SKILL.md` hard rules and quality gates | `rules/00-global.md` through `rules/08-blockers.md` | Split into phase-specific execution rules. |
+| `references/workflow/intake.md` | `rules/01-intake.md` | Intake rules moved into rules layer. |
+| `references/standards/*` | `rules/02-standards.md` and `rules/01-intake.md` | Standards/template behavior moved into rules layer. |
+| `references/evidence/*` | `rules/03-evidence.md` and related phase rules | Evidence workflow moved into rules layer. |
+| `references/writing/chapter-patterns.md` | `knowledge/chapter-patterns.md` | Writing knowledge moved into knowledge layer. |
+| `references/writing/prose-style-guide.md` | `knowledge/prose-style-guide.md` | Writing knowledge moved into knowledge layer. |
+| `references/writing/chinese-academic-phrases.md` | `knowledge/chinese-academic-phrases.md` | Writing knowledge moved into knowledge layer. |
+| `references/writing/sample-analysis.md` | `knowledge/sample-analysis.md` | Writing knowledge moved into knowledge layer. |
+| `references/writing/reference-selection.md` | `knowledge/reference-selection.md` | Writing knowledge moved into knowledge layer. |
+| `references/writing/banned-phrases.yaml` | `knowledge/banned-phrases.yaml` | Shared review data moved into knowledge layer. |
+| `references/writing/domain-vocab.yaml` | `knowledge/domain-vocab.yaml` | Shared review data moved into knowledge layer. |
+| `references/writing/aigc-style-governance.md` | `knowledge/aigc-governance.md` | Renamed and moved into knowledge layer. |
+| `references/literature-search/search-module.md` | `modules/literature-search/module.md` | Literature search promoted to standalone module. |
+| `references/literature-search/keyword-strategy.md` | `modules/literature-search/keyword-strategy.md` | Literature search supporting knowledge moved with module. |
+| `references/literature-search/database-guide.md` | `modules/literature-search/database-guide.md` | Literature search supporting knowledge moved with module. |
+| `references/delivery/word-comment-revision-workflow.md` | `modules/word-comments/module.md` | Word comment workflow promoted to standalone module. |
+| none | `scripts/workspace/reset_workspace.py` | Added generated-workspace reset command with dry-run, confirmation, and archive. |

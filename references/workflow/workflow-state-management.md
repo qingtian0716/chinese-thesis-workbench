@@ -32,6 +32,7 @@ python .\scripts\workspace\init_workflow_logs.py .
 | `evidence-gaps.md` | Unsupported claims and missing materials |
 | `chapter-progress.md` | Chapter-level drafting/review status |
 | `revision-log.md` | All changes from comments, AIGC pass, standards, figures, and final review |
+| `../archive/<timestamp>/` | Archived generated workspace files created by reset operations |
 
 ## Update Rules
 
@@ -106,6 +107,26 @@ next_action:
 | `delivery_done` | Advisor Word comments arrive | `writing_allowed` |
 | `delivery_done` | School/advisor requirement changes | `standards_resolved` |
 | `delivery_done` | New evidence invalidates old facts | `evidence_built` |
+
+## Workspace Reset
+
+Use `scripts/workspace/reset_workspace.py` when generated thesis workspace state needs to be cleared without touching original materials.
+
+Commands:
+
+```powershell
+python scripts/workspace/reset_workspace.py . --reset-output
+python scripts/workspace/reset_workspace.py . --reset-evidence
+python scripts/workspace/reset_workspace.py . --full-reset
+```
+
+All modes first print a dry-run list of affected paths and require typing `yes` before any file changes. Changed paths are archived under `paper-context/archive/<timestamp>/` before reset. The original material directories `papers/` and `assets/` are never reset targets.
+
+Mode behavior:
+
+- `--reset-output`: archive generated outputs, thesis spec/figure registry, and chapter/workflow status files while preserving evidence and literature.
+- `--reset-evidence`: archive generated outputs plus evidence, literature, and workflow logs while preserving original materials.
+- `--full-reset`: archive generated workspace state, including `thesis-ai-standard/`, while preserving original materials.
 
 ## Non-Negotiable Rule
 

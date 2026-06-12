@@ -22,13 +22,19 @@ def load_write_workflow_logs():
 write_workflow_logs = load_write_workflow_logs()
 
 
-def copytree_merge(src: Path, dst: Path, overwrite: bool) -> None:
+def copytree_merge(src: Path, dst: Path, overwrite: bool, confirmed: bool = False) -> None:
     if not src.exists():
         raise FileNotFoundError(f"Bundled template not found: {src}")
 
     if dst.exists() and not overwrite:
         raise FileExistsError(
             f"Target already exists: {dst}. Re-run with --overwrite to replace files."
+        )
+
+    if dst.exists() and overwrite and not confirmed:
+        raise PermissionError(
+            f"Refusing to replace {dst} without explicit confirmation. "
+            "Use --yes-i-understand-this-replaces-thesis-ai-standard for automation."
         )
 
     if dst.exists() and overwrite:
@@ -50,7 +56,15 @@ def main() -> int:
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Replace an existing thesis-ai-standard directory.",
+        help=(
+            "Replace an existing thesis-ai-standard directory after explicit confirmation. "
+            "For broader workspace resets, prefer scripts/workspace/reset_workspace.py."
+        ),
+    )
+    parser.add_argument(
+        "--yes-i-understand-this-replaces-thesis-ai-standard",
+        action="store_true",
+        help="Non-interactive confirmation for --overwrite; intended for tests and automation.",
     )
     parser.add_argument(
         "--no-workflow-logs",
@@ -70,7 +84,15 @@ def main() -> int:
     dst = target_dir / "thesis-ai-standard"
 
     target_dir.mkdir(parents=True, exist_ok=True)
-    copytree_merge(src, dst, overwrite=args.overwrite)
+    overwrite_confirmed = args.yes_i_understand_this_replaces_thesis_ai_standard
+    if args.overwrite and not overwrite_confirmed:
+        print(f"WARNING: --overwrite will delete and recreate: {dst}")
+        print("For thesis workspace resets, prefer scripts/workspace/reset_workspace.py.")
+        overwrite_confirmed = input("Type yes to continue: ").strip() == "yes"
+        if not overwrite_confirmed:
+            print("Cancelled. No files changed.")
+            return 1
+    copytree_merge(src, dst, overwrite=args.overwrite, confirmed=overwrite_confirmed)
     written_logs = []
     if not args.no_workflow_logs:
         written_logs = write_workflow_logs(target_dir, overwrite=args.overwrite_workflow_logs)

@@ -25,7 +25,7 @@ import yaml
 
 def load_banned_phrases() -> List[str]:
     """Load banned phrases from shared YAML file"""
-    phrases_path = Path(__file__).resolve().parents[2] / "references" / "writing" / "banned-phrases.yaml"
+    phrases_path = Path(__file__).resolve().parents[2] / "knowledge" / "banned-phrases.yaml"
     if not phrases_path.exists():
         # Fallback to hardcoded list if YAML not found
         return [

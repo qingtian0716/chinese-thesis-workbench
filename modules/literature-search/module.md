@@ -42,7 +42,7 @@ Before generating a plan, confirm the following. If context.json exists from
 3. 学校参考文献要求（总篇数、外文篇数下限、近五年比例）
 4. 论文章节结构（可选，有则更精准）
 
-If the user cannot provide item 3, use the default from `references/writing/reference-selection.md`.
+If the user cannot provide item 3, use the default from `knowledge/reference-selection.md`.
 If the user cannot provide item 4, generate a plan based on a standard software-system
 or research-paper chapter structure.
 
@@ -51,7 +51,7 @@ items 1 and 2, proceed and note assumptions clearly.
 
 ## AI Reasoning Requirements
 
-Read `references/literature-search/keyword-strategy.md` before generating keywords.
+Read `modules/literature-search/keyword-strategy.md` before generating keywords.
 
 When reasoning about keywords, do the following:
 
@@ -108,7 +108,7 @@ L4 对比参照词（可选检）
 （同上格式）
 
 检索操作说明
-（参考 references/literature-search/database-guide.md）
+（参考 modules/literature-search/database-guide.md）
 
 完成后的下一步
 （告知用户下载 PDF 后可运行 extract_pdf_references.py，

@@ -1,3 +1,20 @@
+﻿# Literature
+
+**Trigger:** Literature review, PDF reference extraction, citation verification, or related work.
+**Required inputs:** PDF papers, thesis topics, citation requirements.
+**Outputs:** paper-context/literature/* and citation verification artifacts
+
+## Hard Rules
+
+- Read `rules/00-global.md` before applying this phase rule.
+- Preserve school/advisor requirements over bundled defaults.
+- Update workflow state files when this rule changes scope, progress, blockers, or user decisions.
+
+## Source Guidance
+
+
+## Literature And PDF Workflow
+
 # Literature And PDF Workflow
 
 Use this reference when a thesis needs literature review, related work, citation cleanup, citation placement, or reference extraction from PDF papers.
@@ -96,62 +113,63 @@ Avoid:
 
 ---
 
-## 脚本对应关系表
+## 鑴氭湰瀵瑰簲鍏崇郴琛?
 
-以下表格明确了文献工作流中各脚本的功能和调用顺序，避免与 SKILL.md Hard Rules 中的流程描述混淆。
+浠ヤ笅琛ㄦ牸鏄庣‘浜嗘枃鐚伐浣滄祦涓悇鑴氭湰鐨勫姛鑳藉拰璋冪敤椤哄簭锛岄伩鍏嶄笌 SKILL.md Hard Rules 涓殑娴佺▼鎻忚堪娣锋穯銆?
 
-| 流程步骤 | SKILL.md 描述 | 对应脚本 | 功能说明 | 输入 | 输出 |
+| 娴佺▼姝ラ | SKILL.md 鎻忚堪 | 瀵瑰簲鑴氭湰 | 鍔熻兘璇存槑 | 杈撳叆 | 杈撳嚭 |
 |---------|--------------|---------|---------|------|------|
-| 1. 提取文献 | - | `extract_pdf_references.py` | 从 PDF 中提取参考文献 | PDF 文件夹 | `reference-extraction.json` |
-| 2. 交叉引用 | - | `build_literature_crossrefs.py` | 建立文献与主题的关联索引 | `reference-extraction.json` + `topics.md` | `citation-crossrefs.md` |
-| 3. 构建候选池 | build pool | `build_reference_pool.py` | **统计工具**：分析文献年份、语言分布 | 参考文献 Markdown | 统计报告（近五年占比等） |
-| 4. 生成核验清单 | generate verification checklist | `write_reference_verification_template.py` | 生成文献核验清单 JSON | `reference-extraction.json`（可选） | `文献核验清单.json` |
-| 5. 核验 | verify | 人工/AI 核验 | 验证文献的真实性、准确性 | 核验清单 | 更新 status 字段 |
-| 6. 筛选 | filter | 人工/AI 筛选 | 根据核验结果筛选文献 | 核验清单 | 筛选后的文献列表 |
-| 7. 格式化 | format | 人工/AI 格式化 | 按学校要求格式化参考文献 | 筛选后的文献 | 最终参考文献列表 |
+| 1. 鎻愬彇鏂囩尞 | - | `extract_pdf_references.py` | 浠?PDF 涓彁鍙栧弬鑰冩枃鐚?| PDF 鏂囦欢澶?| `reference-extraction.json` |
+| 2. 浜ゅ弶寮曠敤 | - | `build_literature_crossrefs.py` | 寤虹珛鏂囩尞涓庝富棰樼殑鍏宠仈绱㈠紩 | `reference-extraction.json` + `topics.md` | `citation-crossrefs.md` |
+| 3. 鏋勫缓鍊欓€夋睜 | build pool | `build_reference_pool.py` | **缁熻宸ュ叿**锛氬垎鏋愭枃鐚勾浠姐€佽瑷€鍒嗗竷 | 鍙傝€冩枃鐚?Markdown | 缁熻鎶ュ憡锛堣繎浜斿勾鍗犳瘮绛夛級 |
+| 4. 鐢熸垚鏍搁獙娓呭崟 | generate verification checklist | `write_reference_verification_template.py` | 鐢熸垚鏂囩尞鏍搁獙娓呭崟 JSON | `reference-extraction.json`锛堝彲閫夛級 | `鏂囩尞鏍搁獙娓呭崟.json` |
+| 5. 鏍搁獙 | verify | 浜哄伐/AI 鏍搁獙 | 楠岃瘉鏂囩尞鐨勭湡瀹炴€с€佸噯纭€?| 鏍搁獙娓呭崟 | 鏇存柊 status 瀛楁 |
+| 6. 绛涢€?| filter | 浜哄伐/AI 绛涢€?| 鏍规嵁鏍搁獙缁撴灉绛涢€夋枃鐚?| 鏍搁獙娓呭崟 | 绛涢€夊悗鐨勬枃鐚垪琛?|
+| 7. 鏍煎紡鍖?| format | 浜哄伐/AI 鏍煎紡鍖?| 鎸夊鏍¤姹傛牸寮忓寲鍙傝€冩枃鐚?| 绛涢€夊悗鐨勬枃鐚?| 鏈€缁堝弬鑰冩枃鐚垪琛?|
 
-### 重要说明
+### 閲嶈璇存槑
 
-1. **`build_reference_pool.py` 是统计工具**，不在主流程上。它用于分析文献池的整体质量（如近五年占比），而不是构建文献池本身。
+1. **`build_reference_pool.py` 鏄粺璁″伐鍏?*锛屼笉鍦ㄤ富娴佺▼涓娿€傚畠鐢ㄤ簬鍒嗘瀽鏂囩尞姹犵殑鏁翠綋璐ㄩ噺锛堝杩戜簲骞村崰姣旓級锛岃€屼笉鏄瀯寤烘枃鐚睜鏈韩銆?
 
-2. **主流程顺序**：`extract_pdf_references.py` → `build_literature_crossrefs.py` → `write_reference_verification_template.py`
+2. **涓绘祦绋嬮『搴?*锛歚extract_pdf_references.py` 鈫?`build_literature_crossrefs.py` 鈫?`write_reference_verification_template.py`
 
-3. **Hard Rules 中的 "build pool"** 指的是 `extract_pdf_references.py` + `build_literature_crossrefs.py` 的组合，而不是 `build_reference_pool.py`。
+3. **Hard Rules 涓殑 "build pool"** 鎸囩殑鏄?`extract_pdf_references.py` + `build_literature_crossrefs.py` 鐨勭粍鍚堬紝鑰屼笉鏄?`build_reference_pool.py`銆?
 
-4. **置信度等级说明**（`build_literature_crossrefs.py`）：
-   - `strong`（score ≥ 6）：高置信度，关键词完全匹配
-   - `weak_match`（score 3-5）：中置信度，部分匹配或年份加分
-   - `needs_check`（score < 3）：低置信度，需要人工核验
+4. **缃俊搴︾瓑绾ц鏄?*锛坄build_literature_crossrefs.py`锛夛細
+   - `strong`锛坰core 鈮?6锛夛細楂樼疆淇″害锛屽叧閿瘝瀹屽叏鍖归厤
+   - `weak_match`锛坰core 3-5锛夛細涓疆淇″害锛岄儴鍒嗗尮閰嶆垨骞翠唤鍔犲垎
+   - `needs_check`锛坰core < 3锛夛細浣庣疆淇″害锛岄渶瑕佷汉宸ユ牳楠?
 
-5. **年份统计说明**（`build_reference_pool.py`）：
-   - 输出近五年文献占比，而非逐条报 BAD_YEAR
-   - 按学校要求（默认 60%）判断是否达标
-   - 提供年份分布统计供参考
+5. **骞翠唤缁熻璇存槑**锛坄build_reference_pool.py`锛夛細
+   - 杈撳嚭杩戜簲骞存枃鐚崰姣旓紝鑰岄潪閫愭潯鎶?BAD_YEAR
+   - 鎸夊鏍¤姹傦紙榛樿 60%锛夊垽鏂槸鍚﹁揪鏍?
+   - 鎻愪緵骞翠唤鍒嗗竷缁熻渚涘弬鑰?
 
 ---
 
-## 完整工作流示例
+## 瀹屾暣宸ヤ綔娴佺ず渚?
 
 ```powershell
-# 1. 从 PDF 提取参考文献
+# 1. 浠?PDF 鎻愬彇鍙傝€冩枃鐚?
 python scripts/literature/extract_pdf_references.py ./papers --out ./paper-context/literature
 
-# 2. 建立文献与主题的交叉引用
+# 2. 寤虹珛鏂囩尞涓庝富棰樼殑浜ゅ弶寮曠敤
 python scripts/literature/build_literature_crossrefs.py ./paper-context/literature/reference-extraction.json \
   --topics ./paper-context/topics.md \
   --out ./paper-context/literature/citation-crossrefs.md \
   --json-out ./paper-context/literature/citation-crossrefs.json
 
-# 3. 统计文献池质量（可选，用于检查近五年占比）
+# 3. 缁熻鏂囩尞姹犺川閲忥紙鍙€夛紝鐢ㄤ簬妫€鏌ヨ繎浜斿勾鍗犳瘮锛?
 python scripts/literature/build_reference_pool.py ./paper-context/literature/reference-extraction.md
 
-# 4. 生成文献核验清单（从已提取的文献自动生成）
+# 4. 鐢熸垚鏂囩尞鏍搁獙娓呭崟锛堜粠宸叉彁鍙栫殑鏂囩尞鑷姩鐢熸垚锛?
 python scripts/literature/write_reference_verification_template.py \
-  ./paper-context/literature/文献核验清单.json \
+  ./paper-context/literature/鏂囩尞鏍搁獙娓呭崟.json \
   --input ./paper-context/literature/reference-extraction.json \
   --default-status needs_check
 
-# 5. 人工/AI 核验文献（更新 status 字段）
-# 6. 筛选通过核验的文献
-# 7. 按学校要求格式化参考文献
+# 5. 浜哄伐/AI 鏍搁獙鏂囩尞锛堟洿鏂?status 瀛楁锛?
+# 6. 绛涢€夐€氳繃鏍搁獙鐨勬枃鐚?
+# 7. 鎸夊鏍¤姹傛牸寮忓寲鍙傝€冩枃鐚?
 ```
+
