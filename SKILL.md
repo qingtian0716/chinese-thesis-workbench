@@ -29,10 +29,10 @@ Run the workflow in this order unless the user is only asking for a narrow inspe
 8. `build_figure_registry`: fill `thesis-ai-standard/templates/figure-registry.yaml`.
 9. `confirm_outline`: confirm chapter structure, word counts, sample/template observations, and any available content emphasis/exclusion decisions before writing.
 10. `assign_section_budgets`: AI evaluates each section's content weight and writes per-section word budgets to `paper-context/workflow/section-word-budget.md`.
-11. `draft_chapters`: read `section-word-budget.md`, write per section, run `count_chapter_words.py --budget` after each section, compress if OVER, verify chapter total at the end.
+11. `draft_chapters`: read `section-word-budget.md`, write per section, run `count_chapter_words.py --budget` after each section, compress if OVER, verify chapter total at the end. **After each section**, run lightweight prose check: scan for banned phrases and obvious AI sentence patterns from `references/writing/prose-style-guide.md`, fix non-compliant paragraphs immediately.
 12. `produce_assets`: generate or collect figures, diagrams, screenshots, tables, and appendix sources.
 13. `produce_docx`: generate or edit the main DOCX and appendix DOCX into `paper-output/` using the recorded delivery path.
-14. `quality_gates`: run standards, evidence, reference, figure, DOCX, and AIGC checks.
+14. `quality_gates`: run standards, evidence, reference, figure, DOCX, **full prose quality report** (`check_prose_quality.py`), and AIGC checks. Generate `<论文标题>-prose-report.md` and `<论文标题>-aigc-report.md`.
 15. `delivery_report`: report outputs, limitations, remaining human decisions, and verification evidence.
 
 `stop_and_report` is a global blocking mechanism, not just step 6. Read `references/workflow/stop-and-report.md` whenever continuing may require guessing.
@@ -92,6 +92,8 @@ After any meaningful phase, blocker, material, outline, or delivery-scope change
 - Formula delivery must be explicit: `latex_text` preserves source formula text, while `formula_image` requires matching image assets.
 - Output filenames must use the thesis title, not generic names such as `final`, `draft`, `paper-final`, or `doc1`.
 - Literature workflow must be: build pool -> verify -> filter -> format -> generate verification checklist.
+- **Language style enforcement**: After completing each chapter draft, apply the banned phrase list and sentence patterns from `references/writing/prose-style-guide.md`. Non-compliant paragraphs must be revised before submission to the user. Use `scripts/review/check_prose_quality.py` to verify compliance.
+- **Prose quality gates**: Run lightweight prose checks (banned phrases, AI sentence patterns) after each section during `draft_chapters`. Run full prose quality report at `quality_gates` stage.
 
 ## Resource Map
 
@@ -103,6 +105,7 @@ After any meaningful phase, blocker, material, outline, or delivery-scope change
 | Evidence extraction | `references/evidence/source-to-thesis-workflow.md`, `references/evidence/fact-extraction.md` |
 | Literature/PDF workflow | `references/evidence/literature-and-pdf-workflow.md`, `scripts/literature/` |
 | Writing and chapter control | `references/writing/writing-pipeline.md`, `references/writing/chapter-patterns.md`, `references/writing/sample-analysis.md` |
+| **Language style and prose quality** | `references/writing/prose-style-guide.md`, `references/writing/chinese-academic-phrases.md`, `scripts/review/check_prose_quality.py` |
 | AIGC style governance | `references/writing/aigc-style-governance.md`, `scripts/review/analyze_aigc_style.py` |
 | DOCX delivery and Word comments | `references/delivery/docx-delivery.md`, `references/delivery/word-comment-revision-workflow.md`, `scripts/docx/` |
 | Figures and screenshots | `scripts/figures/`, `scripts/screenshots/`, `thesis-ai-standard/templates/figure-registry.yaml` |
@@ -124,6 +127,7 @@ Before claiming delivery quality, check:
 - `blocker-report.md` reflects the latest blocker, affected scope, user options, recommended path, and whether limited continuation is allowed.
 - `user-decisions.md` records user-approved choices that affect scope, missing-material handling, limitations, standards, outline, or delivery.
 - If `content-decisions.md` has active candidates, their approved/deferred/excluded status is consistent with the outline, thesis spec, and figure registry.
+- **Prose quality**: Run `scripts/review/check_prose_quality.py` and verify that the prose quality report shows no critical issues (consecutive sentence starts > 3, sentences > 80 chars, banned phrases). Non-compliant paragraphs must be revised.
 
 ## Delivery Contract
 
@@ -134,6 +138,7 @@ Deliver thesis artifacts under `paper-output/`:
 - `<论文标题>-附件.docx`
 - `<论文标题>-image-map.json`
 - `<论文标题>-文献核验清单.json`
+- `<论文标题>-prose-report.md` (语言质量检查报告)
 - `figures/`
 - `screenshots/`
 

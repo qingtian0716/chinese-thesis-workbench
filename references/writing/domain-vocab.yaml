@@ -1,0 +1,290 @@
+# 领域术语词汇表
+# 按论文类型分类，收录常用学术术语及其对应的 AI 易用错的替代词
+
+# 软件工程类
+software_engineering:
+  # 正确表达
+  correct:
+    - "执行"
+    - "实现"
+    - "完成"
+    - "优化"
+    - "改进"
+    - "提升"
+    - "设计"
+    - "构建"
+    - "开发"
+    - "部署"
+    - "测试"
+    - "验证"
+    - "分析"
+    - "评估"
+    - "监控"
+    - "维护"
+    - "配置"
+    - "集成"
+    - "封装"
+    - "抽象"
+    - "重构"
+    - "迭代"
+    - "发布"
+    - "回滚"
+    - "扩容"
+    - "降级"
+    - "熔断"
+    - "限流"
+
+  # 错误表达（AI 常用）
+  incorrect:
+    - "进行了……的操作"
+    - "做了……的事情"
+    - "搞了……的测试"
+    - "弄了……的代码"
+    - "写了……的程序"
+    - "搞了……的系统"
+    - "做了……的功能"
+    - "实现了……的效果"
+    - "达到了……的目的"
+    - "取得了……的成果"
+
+  # 术语对照
+  terminology:
+    - term: "智能合约"
+      english: "Smart Contract"
+      description: "自动执行的计算机程序"
+    - term: "区块链"
+      english: "Blockchain"
+      description: "分布式账本技术"
+    - term: "微服务"
+      english: "Microservices"
+      description: "松耦合的服务架构"
+    - term: "容器化"
+      english: "Containerization"
+      description: "应用打包技术"
+    - term: "持续集成"
+      english: "Continuous Integration, CI"
+      description: "自动化构建和测试"
+    - term: "持续部署"
+      english: "Continuous Deployment, CD"
+      description: "自动化发布流程"
+    - term: "负载均衡"
+      english: "Load Balancing"
+      description: "流量分配机制"
+    - term: "缓存"
+      english: "Cache"
+      description: "临时数据存储"
+    - term: "消息队列"
+      english: "Message Queue"
+      description: "异步通信机制"
+    - term: "API 网关"
+      english: "API Gateway"
+      description: "统一入口管理"
+
+# 电子信息类
+electronic_engineering:
+  correct:
+    - "测量"
+    - "检测"
+    - "采集"
+    - "处理"
+    - "分析"
+    - "优化"
+    - "设计"
+    - "实现"
+    - "验证"
+    - "评估"
+    - "调制"
+    - "解调"
+    - "滤波"
+    - "放大"
+    - "转换"
+    - "编码"
+    - "解码"
+    - "传输"
+    - "接收"
+    - "发送"
+
+  incorrect:
+    - "测了……的数据"
+    - "搞了……的信号"
+    - "弄了……的电路"
+    - "做了……的实验"
+    - "测了……的性能"
+    - "搞了……的系统"
+
+  terminology:
+    - term: "信噪比"
+      english: "Signal-to-Noise Ratio, SNR"
+      description: "信号与噪声的比值"
+    - term: "误码率"
+      english: "Bit Error Rate, BER"
+      description: "传输错误比特的比例"
+    - term: "采样率"
+      english: "Sampling Rate"
+      description: "每秒采样次数"
+    - term: "带宽"
+      english: "Bandwidth"
+      description: "频率范围"
+    - term: "增益"
+      english: "Gain"
+      description: "信号放大倍数"
+    - term: "阻抗"
+      english: "Impedance"
+      description: "电路对交流电的阻碍"
+    - term: "频率响应"
+      english: "Frequency Response"
+      description: "系统对不同频率的响应"
+    - term: "傅里叶变换"
+      english: "Fourier Transform"
+      description: "时域到频域的转换"
+    - term: "卷积"
+      english: "Convolution"
+      description: "信号处理运算"
+    - term: "滤波器"
+      english: "Filter"
+      description: "信号过滤装置"
+
+# 数据科学类
+data_science:
+  correct:
+    - "分析"
+    - "挖掘"
+    - "建模"
+    - "预测"
+    - "分类"
+    - "聚类"
+    - "回归"
+    - "评估"
+    - "优化"
+    - "可视化"
+    - "清洗"
+    - "预处理"
+    - "特征工程"
+    - "训练"
+    - "测试"
+    - "验证"
+    - "部署"
+    - "监控"
+
+  incorrect:
+    - "分析了……的数据"
+    - "搞了……的模型"
+    - "做了……的预测"
+    - "弄了……的算法"
+    - "测了……的结果"
+
+  terminology:
+    - term: "机器学习"
+      english: "Machine Learning, ML"
+      description: "数据驱动的算法"
+    - term: "深度学习"
+      english: "Deep Learning, DL"
+      description: "多层神经网络"
+    - term: "神经网络"
+      english: "Neural Network"
+      description: "模拟生物神经的计算模型"
+    - term: "随机森林"
+      english: "Random Forest"
+      description: "集成学习算法"
+    - term: "支持向量机"
+      english: "Support Vector Machine, SVM"
+      description: "分类算法"
+    - term: "卷积神经网络"
+      english: "Convolutional Neural Network, CNN"
+      description: "图像处理网络"
+    - term: "循环神经网络"
+      english: "Recurrent Neural Network, RNN"
+      description: "序列处理网络"
+    - term: "过拟合"
+      english: "Overfitting"
+      description: "模型过度学习训练数据"
+    - term: "欠拟合"
+      english: "Underfitting"
+      description: "模型学习不足"
+    - term: "交叉验证"
+      english: "Cross-Validation"
+      description: "模型评估方法"
+
+# 通用学术表达
+general_academic:
+  # 引出目的
+  purpose:
+    - "为解决……问题，本文提出……"
+    - "针对……需求，本文设计……"
+    - "围绕……目标，本文构建……"
+    - "基于……理论，本文提出……"
+
+  # 描述方法
+  method:
+    - "本文采用……方法"
+    - "本文基于……技术"
+    - "本文结合……和……"
+    - "本文通过……实现……"
+
+  # 描述结果
+  result:
+    - "实验结果表明……"
+    - "测试结果显示……"
+    - "数据分析证明……"
+    - "对比实验说明……"
+
+  # 总结贡献
+  contribution:
+    - "本文的主要贡献如下：（1）……；（2）……；（3）……"
+    - "本文的创新点在于……"
+    - "本文实现了……，达到了……目标"
+
+  # 过渡衔接
+  transition:
+    - "在完成……的基础上，本章进一步……"
+    - "基于上述分析，……"
+    - "值得注意的是，……"
+    - "综上所述，……"
+
+# 禁用词表（通用）
+banned_phrases:
+  # 空泛表达
+  vague:
+    - "显著提升"
+    - "显著提高"
+    - "显著改善"
+    - "显著增强"
+    - "具有重要意义"
+    - "具有重要价值"
+    - "具有重要作用"
+    - "取得了良好效果"
+    - "取得了显著成效"
+    - "具有广阔的应用前景"
+    - "具有广阔的发展前景"
+    - "为……奠定了基础"
+    - "为……提供了新的思路"
+    - "为……提供了新的方法"
+    - "为……提供了新的视角"
+    - "具有重要的理论价值"
+    - "具有重要的实践价值"
+    - "具有重要的现实意义"
+    - "进行了深入的研究"
+    - "进行了详细的分析"
+    - "进行了系统的总结"
+    - "具有很强的实用性"
+    - "具有很高的效率"
+    - "具有很好的效果"
+
+  # 口语化表达
+  colloquial:
+    - "做了"
+    - "搞了"
+    - "弄了"
+    - "测了"
+    - "写了个"
+    - "做了个"
+    - "搞了个"
+    - "弄了个"
+
+  # 重复句式
+  repetitive_patterns:
+    - "通过……，使得……"
+    - "通过……，实现了……"
+    - "通过……，达到了……"
+    - "通过……，取得了……"
+    - "通过……，获得了……"
