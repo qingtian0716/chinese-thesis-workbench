@@ -180,6 +180,38 @@ python scripts/workspace/build_sample_template_outputs.py result.json --target <
 
 ---
 
+## Current Structure
+
+The workbench is organized into four documentation layers:
+
+```text
+rules/                  AI execution rules loaded before each workflow phase
+knowledge/              Reusable writing knowledge and shared YAML data
+modules/                Independent capabilities such as literature search and Word comments
+references/             Migration records and user-facing workflow references only
+scripts/                Stable executable script packages; import paths are unchanged
+```
+
+Keep script commands stable:
+
+```powershell
+python scripts/workspace/init_thesis_workspace.py .
+python scripts/docx/generate_thesis_docx.py thesis.md output.docx
+python scripts/review/check_prose_quality.py thesis.md
+```
+
+Generated workspace state can be reset without touching original `papers/` or `assets/` material:
+
+```powershell
+python scripts/workspace/reset_workspace.py . --reset-output
+python scripts/workspace/reset_workspace.py . --reset-evidence
+python scripts/workspace/reset_workspace.py . --full-reset
+```
+
+Every reset starts with a dry-run list and requires typing `yes`. Changed generated files are archived under `paper-context/archive/<timestamp>/`.
+
+---
+
 ## 目录
 
 ```
@@ -189,12 +221,10 @@ chinese-thesis-workbench/
   requirements.txt          Python 依赖
   package.json              Node.js 依赖（截图）
 
-  references/              按需加载的参考文档
-    workflow/              工作流、状态管理、阻断、质量门禁、素材稀缺交接
-    standards/             标准解析、样式提取、默认格式
-    evidence/              源码证据、文献治理、事实提取
-    writing/               样文分析、章节写作、参考文献选择、AIGC 治理
-    delivery/              DOCX 成稿（含四种路径）、最终检查、Word 批注修订
+  rules/                   AI execution rules by workflow phase
+  knowledge/               Writing knowledge and shared YAML data
+  modules/                 Independent literature-search and Word-comment capabilities
+  references/              Migration records and user-facing workflow references only
 
   scripts/                 可执行脚本
     workspace/             工作区初始化、工作流日志、分析结果归并
@@ -231,12 +261,12 @@ chinese-thesis-workbench/
 ### 改动范围
 
 - **新增** `scripts/docx/apply_textual_edits.py`（466 行）—— M3 + M4 文本编辑内核
-- **新增** `references/workflow/material-gap-handoff.md`（9 行）—— 素材稀缺流程
+- **新增** `rules/08-blockers.md`（9 行）—— 素材稀缺流程
 - **修改** `scripts/docx/generate_thesis_docx.py` —— 新增 `sample_style_override` + `--sample-analysis` 参数
 - **修改** `SKILL.md` —— 4 处更新（交付路径、格式例外、硬规则、资源映射）
-- **修改** `references/workflow/intake.md` —— 新增四选一交付路径问题
-- **修改** `references/delivery/docx-delivery.md` —— 四种模式说明和命令示例
-- **修改** `references/delivery/word-comment-revision-workflow.md` —— 追加 M4 文本编辑模式一节
+- **修改** `rules/01-intake.md` —— 新增四选一交付路径问题
+- **修改** `rules/07-delivery.md` —— 四种模式说明和命令示例
+- **修改** `modules/word-comments/module.md` —— 追加 M4 文本编辑模式一节
 - **修改** `tests/test_core_contracts.py` —— 新增 4 个测试
 
 ### 向后兼容

@@ -1,3 +1,20 @@
+﻿# Blockers
+
+**Trigger:** Missing materials, unverifiable facts, sparse evidence, or limited continuation decisions.
+**Required inputs:** Current blocker context and affected workflow files.
+**Outputs:** blocker-report.md and user-facing options
+
+## Hard Rules
+
+- Read `rules/00-global.md` before applying this phase rule.
+- Preserve school/advisor requirements over bundled defaults.
+- Update workflow state files when this rule changes scope, progress, blockers, or user decisions.
+
+## Source Guidance
+
+
+## Stop And Report
+
 # Stop And Report
 
 ## Mechanism Definition
@@ -91,3 +108,17 @@ When blocked, report:
 5. Whether limited continuation is allowed.
 6. Two or three options the user can choose from.
 7. The recommended option and reason.
+
+
+## Sparse Material Handoff
+
+# Material Gap Handoff
+
+Use this after intake when materials are too sparse for evidence-based drafting.
+
+1. If required materials are missing in two or more categories, the literature pool is empty, or evidence is only README-level, enter this flow.
+2. Ask whether the user agrees to web search for same-field literature from the last five years. If yes, search and write candidates to `paper-context/literature/web-suggested.md` with status `needs_check`. Do not add them directly to references.
+3. If the user refuses web search, record the limitation in `paper-context/workflow/blocker-report.md` and continue only with visible limits.
+4. Ask whether the user agrees to brainstorm writing directions. If yes, use the brainstorming skill and write ideas only to the candidate section of `content-decisions.md`.
+5. If the user rejects a brainstormed idea, mark it `discarded`; thesis prose, spec, and figure registry must not consume it.
+

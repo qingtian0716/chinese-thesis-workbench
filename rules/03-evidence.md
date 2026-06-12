@@ -1,3 +1,20 @@
+﻿# Evidence
+
+**Trigger:** Source code, database, APIs, screenshots, test reports, or project facts are needed.
+**Required inputs:** Project repository or materials.
+**Outputs:** paper-context/evidence/* and evidence-gaps.md
+
+## Hard Rules
+
+- Read `rules/00-global.md` before applying this phase rule.
+- Preserve school/advisor requirements over bundled defaults.
+- Update workflow state files when this rule changes scope, progress, blockers, or user decisions.
+
+## Source Guidance
+
+
+## Source To Thesis Workflow
+
 # Source To Thesis Workflow
 
 Use this reference when the user gives a program, repository, database, API, screenshots, or test reports and wants a thesis.
@@ -105,3 +122,22 @@ Create or update `figure-registry.yaml` before drawing:
 - screenshots: based on actual running pages or reports
 
 Do not create decorative diagrams that cannot be traced to code or evidence.
+
+
+## Fact Extraction
+
+# Fact Extractor Prompt
+
+鐢ㄤ簬浠庣湡瀹為」鐩腑鎻愮偧璁烘枃浜嬪疄搴曠銆?
+
+杈撳嚭蹇呴』鍥哄畾锛?
+
+- 瑙掕壊闆嗗悎
+- 鏍稿績妯″潡
+- 鍏抽敭涓氬姟闂幆
+- 鍏抽敭鏁版嵁琛?
+- 鍏抽敭涓氬姟瑙勫垯
+- 褰撳墠宸插畬鎴愯兘鍔?
+
+鍚庣画绔犺妭鍙兘鍩轰簬杩欎唤搴曠鎵╁啓銆?
+

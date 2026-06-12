@@ -1,3 +1,20 @@
+﻿# Review
+
+**Trigger:** Quality gates, prose quality, AIGC style review, or completion checks.
+**Required inputs:** Generated thesis artifacts and workflow state.
+**Outputs:** quality reports, blocker reports, revision logs
+
+## Hard Rules
+
+- Read `rules/00-global.md` before applying this phase rule.
+- Preserve school/advisor requirements over bundled defaults.
+- Update workflow state files when this rule changes scope, progress, blockers, or user decisions.
+
+## Source Guidance
+
+
+## Quality Gates
+
 # Quality Gates
 
 Use before saying a thesis package, chapter draft, or review is complete.
@@ -124,3 +141,4 @@ Report:
 - what was verified
 - what still needs human/school-template review
 - which evidence is missing, if any
+

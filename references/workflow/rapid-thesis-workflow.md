@@ -40,7 +40,7 @@ Validate the package before writing:
 python .\scripts\workspace\check_thesis_workspace.py .\thesis-ai-standard
 ```
 
-Read `references/workflow-state-management.md` before long-running thesis work. Update `paper-context/workflow/*.md` at the start and end of every meaningful phase.
+Read `references/workflow/workflow-state-management.md` before long-running thesis work. Update `paper-context/workflow/*.md` at the start and end of every meaningful phase.
 
 ## From Program To Thesis
 
@@ -89,7 +89,7 @@ For existing chapter drafts or after first drafting:
    ```powershell
    python .\scripts\review\analyze_aigc_style.py .\chapter-draft.md --out .\paper-context\aigc\aigc-style-report.md --json-out .\paper-context\aigc\aigc-style-report.json
    ```
-2. Read `references/aigc-style-governance.md`.
+2. Read `knowledge/aigc-governance.md`.
 3. Update `thesis-ai-standard/templates/aigc-style-review.yaml` or a project copy.
 4. Revise only confirmed high-risk paragraphs.
 5. Mark unsupported claims as `needs_source` or `needs_evidence`.
@@ -104,7 +104,7 @@ For `.docx` drafts with advisor comments:
    ```powershell
    python .\scripts\docx\extract_docx_comments.py .\draft.docx --out .\paper-context\word-comments
    ```
-2. Read `references/word-comment-revision-workflow.md`.
+2. Read `modules/word-comments/module.md`.
 3. Read `paper-context/word-comments/word-comment-todos.md`.
 4. Resolve comments one by one; log each change in:
    - `paper-context/word-comments/docx-revision-log.md`

@@ -210,5 +210,136 @@ class CoreContractTests(unittest.TestCase):
             self.assertEqual(profile["styles"]["body_cn"]["size_pt"], 11)
 
 
+    def test_reset_output_archives_outputs_and_preserves_evidence(self) -> None:
+        from scripts.workspace.reset_workspace import reset_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "paper-output").mkdir()
+            (root / "paper-output" / "thesis.md").write_text("draft", encoding="utf-8")
+            (root / "paper-context" / "evidence").mkdir(parents=True)
+            (root / "paper-context" / "evidence" / "facts.md").write_text("facts", encoding="utf-8")
+            (root / "paper-context" / "literature").mkdir()
+            (root / "paper-context" / "literature" / "refs.md").write_text("refs", encoding="utf-8")
+
+            result = reset_workspace(root, "reset-output", confirm=True)
+
+            self.assertFalse((root / "paper-output" / "thesis.md").exists())
+            self.assertTrue((root / "paper-context" / "evidence" / "facts.md").exists())
+            self.assertTrue((root / "paper-context" / "literature" / "refs.md").exists())
+            self.assertEqual(len(result.archived_paths), 1)
+            self.assertTrue(result.archive_dir.exists())
+            self.assertTrue(any(path.name == "thesis.md" for path in result.archive_dir.rglob("*")))
+
+    def test_reset_evidence_preserves_original_materials(self) -> None:
+        from scripts.workspace.reset_workspace import reset_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "papers").mkdir()
+            (root / "papers" / "source.pdf").write_bytes(b"pdf")
+            (root / "assets").mkdir()
+            (root / "assets" / "template.docx").write_bytes(b"docx")
+            (root / "paper-context" / "evidence").mkdir(parents=True)
+            (root / "paper-context" / "evidence" / "facts.md").write_text("facts", encoding="utf-8")
+            (root / "paper-context" / "literature").mkdir()
+            (root / "paper-context" / "literature" / "refs.md").write_text("refs", encoding="utf-8")
+
+            reset_workspace(root, "reset-evidence", confirm=True)
+
+            self.assertTrue((root / "papers" / "source.pdf").exists())
+            self.assertTrue((root / "assets" / "template.docx").exists())
+            self.assertFalse((root / "paper-context" / "evidence" / "facts.md").exists())
+            self.assertFalse((root / "paper-context" / "literature" / "refs.md").exists())
+
+    def test_reset_evidence_archives_parent_directories_without_child_conflicts(self) -> None:
+        from scripts.workspace.reset_workspace import reset_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            workflow = root / "paper-context" / "workflow"
+            workflow.mkdir(parents=True)
+            (workflow / "workflow-status.md").write_text("phase: evidence_built\n", encoding="utf-8")
+            (workflow / "chapter-progress.md").write_text("chapter status", encoding="utf-8")
+            (root / "paper-context" / "evidence").mkdir()
+            (root / "paper-context" / "literature").mkdir()
+
+            result = reset_workspace(root, "reset-evidence", confirm=True)
+
+            self.assertTrue((result.archive_dir / "paper-context" / "workflow" / "workflow-status.md").exists())
+            self.assertTrue((result.archive_dir / "paper-context" / "workflow" / "chapter-progress.md").exists())
+            self.assertTrue((root / "paper-context" / "workflow").exists())
+
+    def test_reset_dry_run_does_not_delete_files(self) -> None:
+        from scripts.workspace.reset_workspace import reset_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "paper-output").mkdir()
+            output = root / "paper-output" / "thesis.md"
+            output.write_text("draft", encoding="utf-8")
+
+            result = reset_workspace(root, "reset-output", confirm=False)
+
+            self.assertTrue(output.exists())
+            self.assertEqual(result.archived_paths, [])
+
+    def test_full_reset_archives_generated_context_but_preserves_archive(self) -> None:
+        from scripts.workspace.reset_workspace import planned_reset_paths, reset_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "paper-context" / "archive" / "old").mkdir(parents=True)
+            old_archive = root / "paper-context" / "archive" / "old" / "kept.md"
+            old_archive.write_text("kept", encoding="utf-8")
+            (root / "paper-context" / "aigc").mkdir()
+            aigc_report = root / "paper-context" / "aigc" / "report.md"
+            aigc_report.write_text("generated", encoding="utf-8")
+
+            planned = planned_reset_paths(root, "full-reset")
+            reset_workspace(root, "full-reset", confirm=True)
+
+            self.assertIn(root / "paper-context" / "aigc", planned)
+            self.assertNotIn(root / "paper-context" / "archive", planned)
+            self.assertFalse(aigc_report.exists())
+            self.assertTrue(old_archive.exists())
+
+    def test_init_workspace_overwrite_requires_explicit_confirmation(self) -> None:
+        from scripts.workspace.init_thesis_workspace import copytree_merge
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            src = root / "src"
+            src.mkdir()
+            (src / "template.txt").write_text("new", encoding="utf-8")
+            dst = root / "dst"
+            dst.mkdir()
+            (dst / "template.txt").write_text("old", encoding="utf-8")
+
+            with self.assertRaises(PermissionError):
+                copytree_merge(src, dst, overwrite=True, confirmed=False)
+
+            copytree_merge(src, dst, overwrite=True, confirmed=True)
+            self.assertEqual((dst / "template.txt").read_text(encoding="utf-8"), "new")
+
+    def test_init_workspace_overwrite_cancel_returns_without_replacing(self) -> None:
+        from scripts.workspace import init_thesis_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            target = root / "workspace"
+            standard = target / "thesis-ai-standard"
+            standard.mkdir(parents=True)
+            marker = standard / "keep.txt"
+            marker.write_text("old", encoding="utf-8")
+
+            with patch("sys.argv", ["init_thesis_workspace.py", str(target), "--overwrite"]):
+                with patch("builtins.input", return_value="no"):
+                    exit_code = init_thesis_workspace.main()
+
+            self.assertEqual(exit_code, 1)
+            self.assertEqual(marker.read_text(encoding="utf-8"), "old")
+
+
 if __name__ == "__main__":
     unittest.main()
