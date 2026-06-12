@@ -4,7 +4,7 @@
 
 检查项：
 1. 连续三句以相同词开头（句式单调）
-2. 单句超过 80 字（过长句）
+2. 单句超过 60 字（过长句）
 3. 空泛词汇命中（基于禁用词表）
 4. 段落字数 < 80 字（过短段，缺少分析）
 5. 数字未使用阿拉伯数字（格式问题）
@@ -16,6 +16,7 @@
 import argparse
 import json
 import re
+from datetime import date
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -99,8 +100,8 @@ def check_consecutive_starts(paragraph: str, threshold: int = 3) -> List[Dict]:
     return issues
 
 
-def check_long_sentences(paragraph: str, threshold: int = 80) -> List[Dict]:
-    """检查过长句子"""
+def check_long_sentences(paragraph: str, threshold: int = 60) -> List[Dict]:
+    """检查过长句子（默认阈值 60 字，与 prose-style-guide.md 一致）"""
     issues = []
     sentences = split_into_sentences(paragraph)
     for s in sentences:
@@ -117,12 +118,24 @@ def check_banned_phrases(paragraph: str) -> List[Dict]:
     """检查禁用词表"""
     issues = []
     for phrase in BANNED_PHRASES:
-        if phrase in paragraph:
-            issues.append({
-                "type": "空泛表达",
-                "detail": f"命中禁用词「{phrase}」",
-                "phrase": phrase,
-            })
+        # 对含"……"的条目使用正则匹配
+        if "……" in phrase:
+            # 将"……"转义为正则表达式的通配符
+            pattern = re.escape(phrase).replace(r"……", ".+?")
+            if re.search(pattern, paragraph):
+                issues.append({
+                    "type": "空泛表达",
+                    "detail": f"命中禁用词「{phrase}」",
+                    "phrase": phrase,
+                })
+        else:
+            # 普通字符串匹配
+            if phrase in paragraph:
+                issues.append({
+                    "type": "空泛表达",
+                    "detail": f"命中禁用词「{phrase}」",
+                    "phrase": phrase,
+                })
     return issues
 
 
@@ -157,23 +170,24 @@ def check_number_format(paragraph: str) -> List[Dict]:
 
 
 def check_english_in_parentheses(paragraph: str) -> List[Dict]:
-    """检查括号内英文标注"""
-    issues = []
-    # 匹配中文括号内的内容
-    pattern = r"（([^）]+)）"
-    matches = re.findall(pattern, paragraph)
-    for content in matches:
-        # 检查是否包含英文
-        if re.search(r"[a-zA-Z]", content):
-            # 检查前面是否有中文术语
-            idx = paragraph.find(f"（{content}）")
-            if idx > 0:
-                before = paragraph[:idx]
-                # 检查前面是否有中文字符
-                if re.search(r"[一-鿿]", before[-5:]):
-                    # 这是正常的英文标注，跳过
-                    continue
-    return issues
+    """检查括号内英文标注
+
+    TODO: 当前实现逻辑无效，需要重新设计。
+
+    应该检查的是：出现了英文缩写但没有对应的中文术语，
+    比如正文中突然出现 （CNN） 但前面没有"卷积神经网络"。
+
+    当前逻辑：发现括号内英文 → 检查前面是否有中文 → 如果有则跳过
+    结果：任何情况都不会报问题，函数永远返回空列表
+
+    暂时返回空列表，避免误导用户以为已经在检查。
+    """
+    # TODO: 实现正确的英文缩写检查逻辑
+    # 应该检查：
+    # 1. 括号内是否包含英文缩写（如 CNN、LSTM、API 等）
+    # 2. 检查该缩写之前是否有对应的中文术语
+    # 3. 如果没有，则报告"专业术语不规范"
+    return []
 
 
 def analyze_paragraph(paragraph: str) -> Dict:
@@ -236,7 +250,7 @@ def generate_report(thesis_title: str, chapters: List[Dict]) -> str:
     """生成检查报告"""
     report = []
     report.append(f"# {thesis_title} - 语言质量检查报告\n")
-    report.append(f"**检查时间**: 2026年6月12日\n")
+    report.append(f"**检查时间**: {date.today().strftime('%Y年%m月%d日')}\n")
     report.append(f"**检查项**: 句式单调、过长句、空泛表达、过短段落、数字格式、专业术语\n")
     report.append("---\n")
 
