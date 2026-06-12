@@ -106,6 +106,7 @@ After any meaningful phase, blocker, material, outline, or delivery-scope change
 | Standards and template resolution | `references/standards/standards-and-template-resolution.md`, `references/standards/style-extraction.md`, `references/standards/default-style.md` |
 | Evidence extraction | `references/evidence/source-to-thesis-workflow.md`, `references/evidence/fact-extraction.md` |
 | Literature/PDF workflow | `references/evidence/literature-and-pdf-workflow.md`, `scripts/literature/` |
+| Literature search plan (standalone) | `references/literature-search/search-module.md`, `references/literature-search/keyword-strategy.md`, `references/literature-search/database-guide.md` |
 | Writing and chapter control | `references/writing/writing-pipeline.md`, `references/writing/chapter-patterns.md`, `references/writing/sample-analysis.md` |
 | **Language style and prose quality** | `references/writing/prose-style-guide.md`, `references/writing/chinese-academic-phrases.md`, `scripts/review/check_prose_quality.py` |
 | AIGC style governance | `references/writing/aigc-style-governance.md`, `scripts/review/analyze_aigc_style.py` |
