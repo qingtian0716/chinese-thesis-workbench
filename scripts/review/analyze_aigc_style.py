@@ -15,6 +15,36 @@ import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+import yaml
+
+
+def load_banned_phrases() -> dict:
+    """Load banned phrases from shared YAML file"""
+    phrases_path = Path(__file__).resolve().parents[2] / "references" / "writing" / "banned-phrases.yaml"
+    if not phrases_path.exists():
+        # Fallback to hardcoded list if YAML not found
+        return {
+            "vague_phrases": [
+                "显著提升", "显著提高", "显著改善", "显著增强",
+                "具有重要意义", "具有重要价值", "具有重要作用",
+                "取得了良好效果", "取得了显著成效",
+                "具有广阔的应用前景", "具有广阔的发展前景",
+                "为……奠定了基础", "为……提供了新的思路", "为……提供了新的方法", "为……提供了新的视角",
+                "具有重要的理论价值", "具有重要的实践价值", "具有重要的现实意义",
+                "进行了深入的研究", "进行了详细的分析", "进行了系统的总结",
+                "具有很强的实用性", "具有很高的效率", "具有很好的效果",
+            ],
+            "colloquial_phrases": ["做了", "搞了", "弄了", "测了"],
+            "ai_sentence_patterns": [],
+        }
+
+    with open(phrases_path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
+
+
+# Load banned phrases from shared YAML
+banned_data = load_banned_phrases()
+
 
 PATTERNS = [
     ("theory_start", r"^(依据|基于|根据|按照|遵循).{0,20}(理论|框架|原则|观点)"),
@@ -29,18 +59,9 @@ PATTERNS = [
     ("copula_avoidance", r"(作为.{0,12}重要载体|扮演着.{0,12}角色|充当着.{0,12}功能|起到了.{0,12}作用)"),
 ]
 
-CLICHE_TERMS = [
-    "深刻揭示",
-    "深入探讨",
-    "系统梳理",
-    "综合运用",
-    "理论支撑",
-    "有效解决",
-    "充分说明",
-    "进一步",
-    "不可或缺",
-    "重要意义",
-]
+# Load cliche terms from shared YAML (vague_phrases + colloquial_phrases)
+CLICHE_TERMS = banned_data.get("vague_phrases", [])[:10]  # Use first 10 as cliche terms
+CLICHE_TERMS.extend(["深刻揭示", "深入探讨", "系统梳理", "综合运用", "理论支撑", "有效解决", "充分说明", "进一步", "不可或缺", "重要意义"])
 
 HARD_FAILURE_PATTERNS = {
     "vague_attribution": "vague attribution needs a verified source or removal",

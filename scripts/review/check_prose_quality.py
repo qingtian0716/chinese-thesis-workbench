@@ -20,34 +20,33 @@ from datetime import date
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+import yaml
 
-# 禁用词表
-BANNED_PHRASES = [
-    "显著提升",
-    "显著提高",
-    "显著改善",
-    "显著增强",
-    "具有重要意义",
-    "具有重要价值",
-    "具有重要作用",
-    "取得了良好效果",
-    "取得了显著成效",
-    "具有广阔的应用前景",
-    "具有广阔的发展前景",
-    "为……奠定了基础",
-    "为……提供了新的思路",
-    "为……提供了新的方法",
-    "为……提供了新的视角",
-    "具有重要的理论价值",
-    "具有重要的实践价值",
-    "具有重要的现实意义",
-    "进行了深入的研究",
-    "进行了详细的分析",
-    "进行了系统的总结",
-    "具有很强的实用性",
-    "具有很高的效率",
-    "具有很好的效果",
-]
+
+def load_banned_phrases() -> List[str]:
+    """Load banned phrases from shared YAML file"""
+    phrases_path = Path(__file__).resolve().parents[2] / "references" / "writing" / "banned-phrases.yaml"
+    if not phrases_path.exists():
+        # Fallback to hardcoded list if YAML not found
+        return [
+            "显著提升", "显著提高", "显著改善", "显著增强",
+            "具有重要意义", "具有重要价值", "具有重要作用",
+            "取得了良好效果", "取得了显著成效",
+            "具有广阔的应用前景", "具有广阔的发展前景",
+            "为……奠定了基础", "为……提供了新的思路", "为……提供了新的方法", "为……提供了新的视角",
+            "具有重要的理论价值", "具有重要的实践价值", "具有重要的现实意义",
+            "进行了深入的研究", "进行了详细的分析", "进行了系统的总结",
+            "具有很强的实用性", "具有很高的效率", "具有很好的效果",
+        ]
+
+    with open(phrases_path, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    return data.get("vague_phrases", [])
+
+
+# Load banned phrases from shared YAML
+BANNED_PHRASES = load_banned_phrases()
 
 
 def load_markdown(file_path: Path) -> str:
@@ -315,6 +314,7 @@ def main():
     parser.add_argument("input_file", help="输入的 Markdown 文件路径")
     parser.add_argument("--output", "-o", help="输出报告路径（默认：paper-output/<论文标题>-prose-report.md）")
     parser.add_argument("--title", "-t", help="论文标题（默认从文件名提取）")
+    parser.add_argument("--section", "-s", help="只检查指定章节（如 '第3章'、'第4章'）")
     parser.add_argument("--json", action="store_true", help="同时输出 JSON 格式报告")
 
     args = parser.parse_args()
@@ -331,8 +331,25 @@ def main():
     text = load_markdown(input_path)
     chapters_data = split_into_chapters(text)
     analysis_results = []
-    for title, content in chapters_data:
-        analysis_results.append(analyze_chapter(title, content))
+
+    # 如果指定了章节，只检查该章节
+    if args.section:
+        target_chapter = None
+        for title, content in chapters_data:
+            if args.section in title:
+                target_chapter = (title, content)
+                break
+
+        if target_chapter:
+            analysis_results.append(analyze_chapter(target_chapter[0], target_chapter[1]))
+            print(f"✅ 只检查章节: {target_chapter[0]}")
+        else:
+            print(f"⚠️ 未找到章节: {args.section}")
+            print(f"可用章节: {[title for title, _ in chapters_data]}")
+            return 1
+    else:
+        for title, content in chapters_data:
+            analysis_results.append(analyze_chapter(title, content))
 
     # 生成报告
     report = generate_report(thesis_title, analysis_results)

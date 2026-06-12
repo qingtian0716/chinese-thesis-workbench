@@ -24,6 +24,7 @@ Run the workflow in this order unless the user is only asking for a narrow inspe
 3. `resolve_standards`: fill `thesis-ai-standard/templates/standard-profile.yaml`.
 4. `analyze_sample_and_template`: normalize school template and sample-paper parser outputs into lightweight analysis reports, outline suggestions, and word budgets before drafting; parser output does not drive DOCX formatting unless the user explicitly selects sample-style generation via `--sample-analysis` or template-copy filling via `--from-template`.
 5. `build_evidence`: extract project facts into `paper-context/evidence/`.
+5.5. `verify_literature`: verify all extracted references from PDFs, cross-check with known sources, and update `paper-context/literature/citation-crossref-register.yaml` with verification status. **This must complete before writing Chapter 1 (research status) or Chapter 2 (related work).**
 6. `stop_and_report`: stop or limit only the affected scope whenever evidence, standards, figures, citations, or DOCX delivery cannot be verified; record options in `blocker-report.md`.
 7. `build_thesis_spec`: fill `thesis-ai-standard/templates/thesis-ai-spec.yaml`.
 8. `build_figure_registry`: fill `thesis-ai-standard/templates/figure-registry.yaml`.
@@ -92,6 +93,7 @@ After any meaningful phase, blocker, material, outline, or delivery-scope change
 - Formula delivery must be explicit: `latex_text` preserves source formula text, while `formula_image` requires matching image assets.
 - Output filenames must use the thesis title, not generic names such as `final`, `draft`, `paper-final`, or `doc1`.
 - Literature workflow must be: build pool -> verify -> filter -> format -> generate verification checklist.
+- **Literature verification gate**: Chapter 1 (research status) and Chapter 2 (related work) sections must not enter formal writing until the literature pool has completed verification (`verify_literature` step). All references cited in these chapters must have `status: verified` in `citation-crossref-register.yaml`.
 - **Language style enforcement**: After completing each chapter draft, apply the banned phrase list and sentence patterns from `references/writing/prose-style-guide.md`. Non-compliant paragraphs must be revised before submission to the user. Use `scripts/review/check_prose_quality.py` to verify compliance.
 - **Prose quality gates**: Run lightweight prose checks (banned phrases, AI sentence patterns) after each section during `draft_chapters`. Run full prose quality report at `quality_gates` stage.
 
