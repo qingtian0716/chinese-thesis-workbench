@@ -131,7 +131,17 @@ def build_crossrefs(refs: list[dict[str, str]], topics: list[dict[str, str]]) ->
         for ref in refs:
             value, overlaps = score(topic["text"] + " " + topic["topic"], ref["reference"])
             if value > 0:
-                confidence = "strong" if value >= 4 else "needs_check"
+                # 引入两档阈值，提高区分度
+                # score >= 6: strong（高置信度，关键词完全匹配）
+                # score 3-5: weak_match（中置信度，部分匹配或年份加分）
+                # score < 3: needs_check（低置信度，需要人工核验）
+                if value >= 6:
+                    confidence = "strong"
+                elif value >= 3:
+                    confidence = "weak_match"
+                else:
+                    confidence = "needs_check"
+
                 ranked.append(
                     {
                         "score": value,
